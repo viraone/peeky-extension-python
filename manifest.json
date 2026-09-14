@@ -1,0 +1,77 @@
+{
+  "id": "python-toolkit",
+  "name": "Python Toolkit",
+  "version": "1.0.0",
+  "description": "Format, lint, check, and test Python projects in Peeky Code.",
+  "author": "viraone",
+  "homepage": "https://github.com/viraone/peeky-extension-python",
+  "apiVersion": 1,
+  "contributes": {
+    "formatters": [
+      {
+        "id": "black",
+        "name": "Black",
+        "extensions": [
+          "py",
+          "pyi"
+        ],
+        "command": "black",
+        "args": [
+          "--quiet",
+          "-"
+        ],
+        "stdin": true,
+        "timeout": 30
+      }
+    ],
+    "linters": [
+      {
+        "id": "ruff",
+        "name": "Ruff",
+        "extensions": [
+          "py",
+          "pyi"
+        ],
+        "command": "ruff",
+        "args": [
+          "check",
+          "--output-format",
+          "concise",
+          "${file}"
+        ],
+        "pattern": "^[^:]+:(?<line>\\d+):(?<col>\\d+): (?<message>.*)$",
+        "stdin": false,
+        "timeout": 30
+      }
+    ],
+    "actions": [
+      {
+        "verb": "run_python_tests",
+        "description": "Run pytest for the current Python project, optionally limited to one target.",
+        "note": "Running Python tests...",
+        "runner": "shell",
+        "script": "scripts/run-tests.sh",
+        "irreversible": false,
+        "timeout": 300,
+        "params": [
+          {
+            "name": "target",
+            "description": "Optional pytest target, such as tests/test_api.py or tests/test_api.py::test_name.",
+            "required": false
+          }
+        ],
+        "example": "{\"verb\":\"run_python_tests\",\"params\":{\"target\":\"tests\"}}"
+      },
+      {
+        "verb": "check_python_project",
+        "description": "Compile Python sources and run Ruff checks for the current project.",
+        "note": "Checking Python project...",
+        "runner": "shell",
+        "script": "scripts/check-project.sh",
+        "irreversible": false,
+        "timeout": 120,
+        "example": "{\"verb\":\"check_python_project\",\"params\":{}}"
+      }
+    ]
+  }
+}
